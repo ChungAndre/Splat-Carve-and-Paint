@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>3D Gaussian Splatting: Authoring & Storytelling</title>
+        <link rel="stylesheet" href="./src/style.css">
+        <link rel="icon" href="data:,">
+    </head>
+    <body>
+        <div id="labels-container" style="position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 5; overflow: hidden;"></div>
+        <div id="app-sidebar">
+            <div class="sidebar-tab active" id="tab-editor" title="Splat Editor">🖌️<br><span>EDIT</span></div>
+            <div class="sidebar-tab" id="tab-tour" title="Museum Tour Builder">🏛️<br><span>TOUR</span></div>
+        </div>
+        <div id="editor-workspace">
+            <div class="toolbar top-menu">
+                <label for="upload-splat" class="menu-item" style="cursor: pointer; font-weight: bold; color: white;">📂 1. Load Raw Scan (.PLY)</label>
+                <input type="file" id="upload-splat" accept=".ply" style="display: none;">
+                <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                <div class="menu-item" id="save-exhibit-btn" style="color: #4CAF50; cursor: pointer; font-weight: bold;">💾 2. Export Clean Scene</div>
+            </div>
+
+            <div id="bottom-toolbar" class="toolbar bottom-menu">
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button class="tool-btn" data-mode="TRANSFORM" style="padding: 6px 12px; border-radius: 4px; background: #333; color: white; border: none; cursor: pointer;">☩ Transform</button>
+                </div>
+                <div style="width: 1px; height: 24px; background: #444;"></div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <select id="selection-action-toggle" style="padding: 6px; border-radius: 4px; background: #222; color: white; border: 1px solid #555; cursor: pointer;">
+                        <option value="ERASE">Erase</option>
+                        <option value="CROP">Crop</option>
+                        <option value="PAINT">Paint</option>
+                        <option value="COPY">Copy</option>
+                    </select>
+                    <button class="icon-btn tool-btn" data-mode="RECTANGLE" title="Rectangle Select" aria-label="Rectangle Select">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"/></svg>
+                    </button>
+                    <button class="icon-btn tool-btn" data-mode="CIRCLE" title="Circle Select" aria-label="Circle Select">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><circle cx="12" cy="12" r="7"/></svg>
+                    </button>
+                    <button class="icon-btn tool-btn" data-mode="LASSO" title="Lasso Select" aria-label="Lasso Select">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true"><path d="M6 12c2-5 8-7 10-4 2 3-1 8-5 8-3 0-4-2-5-4z"/></svg>
+                    </button>
+                </div>
+                <div style="width: 1px; height: 24px; background: #444;"></div>
+                <div style="display: flex; align-items: center; gap: 5px;">
+                    <button class="icon-btn tool-btn" data-mode="PICKER" title="Eyedropper">🖍️</button>
+                </div>
+                <div style="width: 1px; height: 24px; background: #444;"></div>
+                <div style="display: flex; align-items: center; gap: 10px; font-size: 12px; color: white; background: #222; padding: 4px 10px; border-radius: 4px;">
+                    <input type="color" id="color-picker" value="#ffc800" style="cursor: pointer; width: 30px; height: 24px; border: none; background: none;">
+                    <label style="display: flex; align-items: center; gap: 5px;">Opacity: <input type="range" id="paint-opacity-slider" min="0.05" max="1.0" step="0.05" value="0.5" style="width: 70px;"></label>
+                </div>
+            </div>
+        </div>
+        <div id="tour-workspace" style="display: none;">
+            <div class="toolbar top-menu">
+                <label for="upload-splat-tour" class="menu-item" style="cursor: pointer; font-weight: bold; color: white;">📂 1. Load Clean Scene (.PLY)</label>
+                <input type="file" id="upload-splat-tour" accept=".ply" style="display: none;">
+                <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                <label for="load-tour-input" class="menu-item" style="cursor: pointer; color: #2196F3; font-weight: bold;">📂 2. Load Tour (.JSON)</label>
+                <input type="file" id="load-tour-input" accept=".json" style="display: none;">
+                <div style="width: 1px; height: 20px; background: var(--border);"></div>
+                <div class="menu-item" id="save-tour-btn" style="color: #2196F3; cursor: pointer; font-weight: bold;">💾 3. Save Tour</div>
+            </div>
+
+            <div class="toolbar bottom-menu" style="justify-content: center;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="tool-btn" data-mode="MARKER" style="background: #2196F3; color: white; border: none; border-radius: 4px; padding: 10px 15px; cursor: pointer; font-weight: bold; font-size: 14px;">Drop Text Marker</button>
+                    <button id="save-waypoint-btn" style="background: #9c27b0; color: white; border: none; border-radius: 4px; padding: 10px 15px; cursor: pointer; font-weight: bold; font-size: 14px;">Save Camera Viewpoint</button>
+                    <div style="width: 1px; height: 30px; background: #444;"></div>
+                    <button id="mode-toggle-btn" style="background: #4CAF50; color: white; border: none; border-radius: 4px; padding: 10px 25px; cursor: pointer; font-weight: bold; font-size: 14px; letter-spacing: 1px;">PLAY PRESENTATION</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="tour-nav" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); display: none; gap: 20px; z-index: 100;">
+            <button id="tour-prev" style="padding: 12px 24px; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 30px; cursor: pointer; backdrop-filter: blur(5px);">⬅️ Previous</button>
+            <button id="tour-next" style="padding: 12px 24px; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.8); color: white; border: 2px solid white; border-radius: 30px; cursor: pointer; backdrop-filter: blur(5px);">➡️ Next</button>
+        </div>
+        <div id="floating-panel" class="toolbar" style="top: 80px; right: 20px; left: auto;">
+            <div class="panel-header">☷ SCENE MANAGER</div>
+            <div class="panel-content">
+                <div id="ui-desc" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Workspace Active.</div>
+                <div style="font-size: 11px; font-weight: bold; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; margin-top: 10px;">▤ LAYERS (SCENES)</div>
+                <div id="scene-list-container" style="display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; max-height: 150px; overflow-y: auto;"></div>
+                <div style="font-size: 11px; font-weight: bold; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px;">☩ TRANSFORM</div>
+                <div class="transform-row">Position <input class="transform-input" value="0"> <input class="transform-input" value="0"> <input class="transform-input" value="0"></div>
+                <div class="transform-row">Rotation <input class="transform-input" value="0"> <input class="transform-input" value="0"> <input class="transform-input" value="0"></div>
+                <div class="transform-row">Scale <input class="transform-input" value="1" style="width: 170px;"></div>
+            </div>
+        </div>
+
+        <script type="module" src="./src/main.js"></script>
+    </body>
+</html>

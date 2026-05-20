@@ -33,5 +33,5 @@ To achieve smooth performance in a web browser manipulating millions of points, 
 * **Dynamic Layer Matrix Management:** Cloned splats are decoupled from the base mesh via a proxy `THREE.Object3D`. The render loop synchronizes the splat scene to the proxy, allowing independent transformation of multiple 3DGS layers in a single WebGL context.
 
 ## How to Use
-3. **Editor Mode:** Load a `.ply` file, use the shape tools to crop noise, and export the clean scene.
-4. **Tour Mode:** Switch to the Tour tab, load your clean `.ply`, place markers, save waypoints, and click "Presentation Mode".
+**Editor Mode:** Load a `.ply` file, use the shape tools to crop noise, and export the clean scene.
+**Tour Mode:** Switch to the Tour tab, load your clean `.ply`, place markers, save waypoints, and click "Presentation Mode".
