@@ -59,3 +59,14 @@ This project uses [Vite](https://vitejs.dev/) as its build tool and development 
 ## How to Use
 * **Editor Mode:** Load a `.ply` file, use the shape tools to crop noise, and export the clean scene.
 * **Tour Mode:** Switch to the Tour tab, load your clean `.ply`, place markers, save waypoints, and click "Presentation Mode".
+
+## Sample Data / Demo Assets
+
+Due to file size constraints, some raw 3D Gaussian Splats (`.ply`) files are not included in this repository. 
+
+You can download sample environments to test the application from the following Google Drive folder:
+**[Download Sample Splats (Google Drive)](https://drive.google.com/drive/folders/1WSy2DpK6W2ZKB_2zHBTWD-59wK5vQW7c?usp=share_link)**
+
+**To use the sample data:**
+1. Download a `.ply` file from the Google Drive link.
+2. You can place the downloaded file in the `public/models/` directory, or simply load it directly from your local machine when using the Editor.
