@@ -32,6 +32,30 @@ To achieve smooth performance in a web browser manipulating millions of points, 
 * **Zero-Copy Web Worker Exporting:** The `.ply` generator runs on a background CPU thread. It formats the raw 32-bit float arrays and strictly adheres to the Level-0 PLY format (stripping out unused Spherical Harmonics) to reduce exported file sizes by up to 50% without freezing the UI.
 * **Dynamic Layer Matrix Management:** Cloned splats are decoupled from the base mesh via a proxy `THREE.Object3D`. The render loop synchronizes the splat scene to the proxy, allowing independent transformation of multiple 3DGS layers in a single WebGL context.
 
+## Local Development
+
+This project uses [Vite](https://vitejs.dev/) as its build tool and development server. 
+
+### Prerequisites
+* [Node.js](https://nodejs.org/) (v18 or higher recommended)
+
+### Installation & Running
+
+1. **Clone the repository and navigate into it:**
+   ```bash
+   git clone https://github.com/ChungAndre/Splat-Carve-and-Paint.git
+   cd Splat-Carve-and-Paint
+   ```
+
+2. **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3. **Start the local development server:**
+    ```bash
+    npm run dev
+    ```
 ## How to Use
-**Editor Mode:** Load a `.ply` file, use the shape tools to crop noise, and export the clean scene.
-**Tour Mode:** Switch to the Tour tab, load your clean `.ply`, place markers, save waypoints, and click "Presentation Mode".
+* **Editor Mode:** Load a `.ply` file, use the shape tools to crop noise, and export the clean scene.
+* **Tour Mode:** Switch to the Tour tab, load your clean `.ply`, place markers, save waypoints, and click "Presentation Mode".
